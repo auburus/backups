@@ -1,0 +1,36 @@
+# Python
+*/.venv
+*/venv
+*/__pycache__
+*/pytest_cache
+*/.pytest_cache
+*/*.pyc
+
+# JS
+*/node_modules
+
+# JS
+*/dist
+
+# PHP
+*/vendor
+*/cache
+
+# Terraform
+*/.terraform
+
+# Generic
+*/tmp
+
+# CMake
+*/.cmake
+*/build
+
+# Elixir
+*/_build
+*/_rel
+*/.erlang.mk
+*/.elixir_ls
+
+# Hugo
+*/_gen

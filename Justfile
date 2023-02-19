@@ -1,3 +1,5 @@
+set dotenv-load
+
 help:
   @just -l
 
@@ -12,6 +14,7 @@ backup-create:
     --exclude-from ./EXCLUDEFILE \
     ./borg-repo::{now} ~/files
 
+
 # Remove old backups
 backup-prune:
   borg prune \
@@ -23,6 +26,14 @@ backup-prune:
 
   borg compact ./borg-repo
 
-# List backups
+
+offsite-create:
+  #!/bin/bash
+  cd terraform
+  terraform init
+  terraform apply
+
+
+# List local backups
 list:
   borg list ./borg-repo

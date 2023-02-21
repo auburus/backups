@@ -6,6 +6,12 @@ help:
 init:
   borg init --encryption=repokey ./borg-repo
 
+# Combined backup script
+backup:
+  @just backup-create
+  @just backup-prune
+  @just backup-offsite
+
 # Create backup file
 backup-create:
   borg create \

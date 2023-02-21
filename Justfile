@@ -26,6 +26,14 @@ backup-prune:
 
   borg compact ./borg-repo
 
+backup-offsite:
+  #!/bin/bash
+  set -euo pipefail
+  export B2_APPLICATION_KEY=$(terraform -chdir=terraform output -json | jq -r '.b2_backups_api_keys.value.application_key')
+  export B2_APPLICATION_KEY_ID=$(terraform -chdir=terraform output -json | jq -r '.b2_backups_api_keys.value.application_key_id')
+
+  set -x
+  pipx run b2 sync ./borg-repo "b2://$B2_BUCKET_NAME/borg-repo"
 
 offsite-create:
   #!/bin/bash

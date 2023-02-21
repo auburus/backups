@@ -41,8 +41,19 @@ backup-offsite:
   set -x
   pipx run b2 sync ./borg-repo "b2://$B2_BUCKET_NAME/borg-repo"
 
+sync-buckets:
+  #!/bin/bash
+  set -euo pipefail
+  export NEW_BUCKET_NAME=$(terraform -chdir=terraform output -json | jq -r '.bucket_name.value')
+
+  set -x
+  pipx run b2 sync "b2://$B2_BUCKET_NAME" "b2://$NEW_BUCKET_NAME"
+  
+
 offsite-create:
   #!/bin/bash
+  set -euxo pipefail
+
   cd terraform
   terraform init
   terraform apply
@@ -51,3 +62,6 @@ offsite-create:
 # List local backups
 list:
   borg list ./borg-repo
+
+format:
+  terraform fmt terraform/

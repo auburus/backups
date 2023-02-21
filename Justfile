@@ -35,20 +35,12 @@ backup-prune:
 backup-offsite:
   #!/bin/bash
   set -euo pipefail
+  export B2_BUCKET_NAME=$(terraform -chdir=terraform output -json | jq -r '.bucket_name.value')
   export B2_APPLICATION_KEY=$(terraform -chdir=terraform output -json | jq -r '.b2_backups_api_keys.value.application_key')
   export B2_APPLICATION_KEY_ID=$(terraform -chdir=terraform output -json | jq -r '.b2_backups_api_keys.value.application_key_id')
 
   set -x
   pipx run b2 sync ./borg-repo "b2://$B2_BUCKET_NAME/borg-repo"
-
-sync-buckets:
-  #!/bin/bash
-  set -euo pipefail
-  export NEW_BUCKET_NAME=$(terraform -chdir=terraform output -json | jq -r '.bucket_name.value')
-
-  set -x
-  pipx run b2 sync "b2://$B2_BUCKET_NAME" "b2://$NEW_BUCKET_NAME"
-  
 
 offsite-create:
   #!/bin/bash

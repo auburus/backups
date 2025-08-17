@@ -1,7 +1,14 @@
 set dotenv-load
+# set shell := ["bash", "set -euo pipefail"]
+
+export PATH := justfile_directory() / ".venv/bin" + x":${PATH}"
 
 help:
   @just -l
+
+setenv:
+  mise install
+  uv sync --python `mise which python`
 
 init:
   borg init --encryption=repokey ./borg-repo
@@ -36,11 +43,11 @@ backup-offsite:
   #!/bin/bash
   set -euo pipefail
   export B2_BUCKET_NAME=$(terraform -chdir=terraform output -json | jq -r '.bucket_name.value')
-  export B2_APPLICATION_KEY=$(terraform -chdir=terraform output -json | jq -r '.b2_backups_api_keys.value.application_key')
-  export B2_APPLICATION_KEY_ID=$(terraform -chdir=terraform output -json | jq -r '.b2_backups_api_keys.value.application_key_id')
+  # export B2_APPLICATION_KEY=$(terraform -chdir=terraform output -json | jq -r '.b2_backups_api_keys.value.application_key')
+  # export B2_APPLICATION_KEY_ID=$(terraform -chdir=terraform output -json | jq -r '.b2_backups_api_keys.value.application_key_id')
 
   set -x
-  pipx run b2 sync ./borg-repo "b2://$B2_BUCKET_NAME/borg-repo"
+  b2 sync ./borg-repo "b2://$B2_BUCKET_NAME/borg-repo"
 
 offsite-create:
   #!/bin/bash
